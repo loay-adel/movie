@@ -117,3 +117,17 @@ if (localStorage.key("signupData") != "") {
   });
   signup.innerHTML = username;
 }
+// ------------------------------
+// Sidebar Toggle Code
+// ------------------------------
+document.getElementById("toggleSidebar").addEventListener("click", () => {
+  const sidebar = document.getElementById("sidebar");
+
+  if (sidebar.classList.contains("d-none")) {
+    sidebar.classList.remove("d-none");
+    sidebar.classList.add("d-flex");
+  } else {
+    sidebar.classList.remove("d-flex");
+    sidebar.classList.add("d-none");
+  }
+});
