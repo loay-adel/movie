@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Authentication Page</title>
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+
+    <style>
+      .form-container {
+        max-width: 400px;
+        margin: 2rem auto;
+      }
+      .toggle-buttons {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+      .toggle-buttons button {
+        margin: 0 0.5rem;
+      }
+    </style>
+  </head>
+  <body class="bg-black">
+    <div class="container form-container">
+      <div class="toggle-buttons">
+        <button id="showSignUp" class="btn bg-my-color text-white">
+          Sign Up
+        </button>
+        <button id="showSignIn" class="btn btn-secondary">Sign In</button>
+      </div>
+
+      <!-- Sign Up Form -->
+      <div id="signUpFormContainer">
+        <div class="card shadow-lg">
+          <div class="card-body">
+            <h2 class="text-center mb-4 main-text">Sign Up</h2>
+            <form id="signupForm" novalidate>
+              <div class="mb-3">
+                <label for="suName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="suName" required />
+                <div class="invalid-feedback">Please enter your full name.</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="suEmail" class="form-label">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="suEmail"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a valid email.</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="suPassword" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="suPassword"
+                  required
+                />
+                <div class="invalid-feedback">Please enter a password.</div>
+              </div>
+
+              <div class="mb-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="suTerms"
+                  required
+                />
+                <label class="form-check-label" for="suTerms"
+                  >Agree to terms and conditions</label
+                >
+                <div class="invalid-feedback">
+                  You must agree before submitting.
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                Sign Up
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sign In Form -->
+      <div id="signInFormContainer" style="display: none">
+        <div class="card shadow-lg">
+          <div class="card-body">
+            <h2 class="text-center mb-4 main-text">Sign In</h2>
+            <form id="signinForm" novalidate>
+              <div class="mb-3">
+                <label for="siEmail" class="form-label">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="siEmail"
+                  required
+                />
+                <div class="invalid-feedback">Please enter your email.</div>
+              </div>
+
+              <div class="mb-3">
+                <label for="siPassword" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="siPassword"
+                  required
+                />
+                <div class="invalid-feedback">Please enter your password.</div>
+              </div>
+
+              <button type="submit" class="btn btn-secondary w-100">
+                Sign In
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Toggle between Sign Up and Sign In forms
+      document
+        .getElementById("showSignUp")
+        .addEventListener("click", function () {
+          document.getElementById("signUpFormContainer").style.display =
+            "block";
+          document.getElementById("signInFormContainer").style.display = "none";
+        });
+      document
+        .getElementById("showSignIn")
+        .addEventListener("click", function () {
+          document.getElementById("signUpFormContainer").style.display = "none";
+          document.getElementById("signInFormContainer").style.display =
+            "block";
+        });
+
+      // Sign Up form: store data and redirect to index.html without alerts
+      (function () {
+        "use strict";
+
+        var signupForm = document.getElementById("signupForm");
+        signupForm.addEventListener(
+          "submit",
+          function (event) {
+            if (!signupForm.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            } else {
+              event.preventDefault();
+              var userData = {
+                name: document.getElementById("suName").value,
+                email: document.getElementById("suEmail").value,
+                password: document.getElementById("suPassword").value,
+              };
+              localStorage.setItem("signupData", JSON.stringify(userData));
+              window.location.href = "index.html";
+            }
+            signupForm.classList.add("was-validated");
+          },
+          false
+        );
+      })();
+
+      // Sign In form: verify credentials and redirect to index.html without alerts
+      (function () {
+        "use strict";
+
+        var signinForm = document.getElementById("signinForm");
+        signinForm.addEventListener(
+          "submit",
+          function (event) {
+            if (!signinForm.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            } else {
+              event.preventDefault();
+              var email = document.getElementById("siEmail").value;
+              var password = document.getElementById("siPassword").value;
+              var storedData = JSON.parse(localStorage.getItem("signupData"));
+              if (
+                storedData &&
+                storedData.email === email &&
+                storedData.password === password
+              ) {
+                window.location.href = "index.html";
+              } else {
+                // If credentials don't match, you can handle errors as needed, e.g., show inline error messages
+                document
+                  .getElementById("siPassword")
+                  .setCustomValidity("Invalid credentials");
+                signinForm.classList.add("was-validated");
+              }
+            }
+            signinForm.classList.add("was-validated");
+          },
+          false
+        );
+      })();
+    </script>
+  </body>
+</html>

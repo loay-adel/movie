@@ -1,0 +1,29 @@
+/* Basic Reset */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Color Variables */
+:root {
+  --main-color: #b4121b;
+  --sec-color: #000000;
+}
+
+/* Custom Text and Background Colors */
+.main-text {
+  color: var(--main-color);
+}
+.bg-my-color {
+  background-color: var(--main-color);
+}
+.support-color {
+  background-color: var(--sec-color);
+}
+
+/* Optional: Additional styles for card body */
+.card-body-myedit {
+  height: 15em;
+  overflow: hidden;
+}
