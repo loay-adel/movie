@@ -16,67 +16,60 @@
       <button id="toggleSidebar" class="btn btn-primary">open Sidebar</button>
     </div>
 
-    <!-- Navigation Sidebar -->
-    <div class="min-vh-100 bg-black">
-      <div class="container-fluid support-color main-text">
-        <div class="row">
-          <nav
-            id="sidebar"
-            class="col-12 d-none d-md-flex flex-column p-3 support-color col-md-2"
-          >
-            <h4>Library</h4>
-            <ul class="nav flex-column">
-              <li class="nav-item d-none d-md-block">
-                <input
-                  type="text"
-                  id="searchInput"
-                  class="form-control mt-2"
-                  placeholder="Search for a movie..."
-                />
-              </li>
-              <li class="nav-item">
-                <a class="nav-link main-text fw-bold" href="./index.html"
-                  >Home</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link active main-text fw-bold"
-                  href="./library.html"
-                  >Library</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link main-text fw-bold signUp position-relative"
-                  href="signup.html"
-                  >Sign up</a
-                >
-              </li>
-            </ul>
-          </nav>
+    <div class="container-fluid support-color main-text">
+      <div class="row min-vh-100">
+        <!-- Navigation Sidebar -->
+        <nav
+          id="sidebar"
+          class="col-12 col-md-2 d-none d-md-flex flex-column p-3 support-color main-text"
+        >
+          <h4>Library</h4>
+          <ul class="nav flex-column">
+            <li class="nav-item d-none d-md-block">
+              <input
+                type="text"
+                id="searchInput"
+                class="form-control mt-2"
+                placeholder="Search for a movie..."
+              />
+            </li>
+            <li class="nav-item">
+              <a class="nav-link main-text fw-bold" href="./index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active main-text fw-bold" href="./library.html"
+                >Library</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link main-text fw-bold signUp position-relative"
+                href="signup.html"
+                >Sign up</a
+              >
+            </li>
+          </ul>
+        </nav>
 
-          <!-- Main Content -->
-          <div class="d-flex justify-content-center">
+        <!-- Main Content -->
+        <main class="col-12 col-md-10 p-4">
+          <div class="d-flex justify-content-center d-md-none">
             <input
               type="text"
               id="searchInput"
-              class="form-control mt-2 w-75 d-md-none"
+              class="form-control mt-2 w-75"
               placeholder="Search for a movie..."
             />
           </div>
-          <main class="col-12 col-md-10 p-4 w-100">
-            <h2>Movie Library</h2>
 
-            <!-- Search Results Section -->
-            <section id="searchResults" class="mt-4 container">
-              <h3>Search Results</h3>
-              <div class="row search"></div>
-            </section>
-          </main>
-        </div>
+          <section id="searchResults" class="mt-4 container">
+            <h3>Search Results</h3>
+            <div class="row search"></div>
+          </section>
+        </main>
       </div>
     </div>
+
     <!-- Bootstrap JS -->
     <script src="js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
