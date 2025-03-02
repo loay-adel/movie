@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     searchResults.innerHTML = `
-        <h2 class="text-white">Movies</h2>
+        <h2 class="text-white my-4">Movies</h2>
         <div class="row">
           ${movies
             .map(
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </div>
   
-        <h2 class="text-white mt-4">TV Series</h2>
+        <h2 class="text-white my-4">TV Series</h2>
         <div class="row">
           ${series
             .map(
