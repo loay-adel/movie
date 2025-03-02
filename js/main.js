@@ -10,29 +10,51 @@ const options = {
 
 let signup = document.querySelector(".signUp");
 
-if (localStorage.key("signupData") != "") {
-  const storedData = JSON.parse(localStorage.getItem("signupData"));
-  const username = storedData ? storedData.name : "signup";
-  signup.addEventListener("click", (stop) => {
-    stop.preventDefault();
+// Check if user is signed up
+const storedData = localStorage.getItem("signupData");
+if (storedData) {
+  const userData = JSON.parse(storedData);
+  const username = userData.username || "User";
+
+  signup.textContent = username;
+
+  signup.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    let existingSignOut = document.querySelector(".signOut");
+    if (existingSignOut) {
+      existingSignOut.remove();
+      return;
+    }
+
     let signOut = document.createElement("span");
     signOut.textContent = "Sign Out";
-    signOut.style.color = "Red";
-    signOut.style.fontWeight = "bold";
-    signOut.style.cursor = "pointer";
-    signOut.style.position = "absolute";
-    signOut.style.bottom = "-1.5em";
-    signOut.style.left = "1em";
+    signOut.classList.add("signOut");
+    signOut.style.cssText = `
+      color: red;
+      font-weight: bold;
+      cursor: pointer;
+      position: absolute;
+      bottom: -1.5em;
+      left: 1em;
+    `;
+
     signOut.addEventListener("click", () => {
-      signup.innerHTML = "Sign Up";
-      signup.addEventListener("click", () => {
-        window.location.href = "signup.html";
-      });
+      localStorage.removeItem("signupData");
+      signup.textContent = "Sign Up";
+      signup.setAttribute("href", "signup.html");
+      location.reload();
     });
+
     signup.appendChild(signOut);
   });
-  signup.innerHTML = username;
+} else {
+  signup.textContent = "Sign Up";
+  signup.addEventListener("click", () => {
+    window.location.href = "signup.html";
+  });
 }
+
 const moviesGallery = document.querySelector("div.the-gallery");
 const seriesGallery = document.querySelector("div.the-series-gallery");
 
@@ -43,8 +65,6 @@ const hideSeriesBtn = document.getElementById("hideSeriesBtn");
 
 let allMovies = [];
 let allSeries = [];
-
-// Fetch popular movies
 
 fetch(
   "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
@@ -57,7 +77,6 @@ fetch(
   })
   .catch((err) => console.error(err));
 
-// Fetch popular series (using a trending endpoint as an example)
 fetch(
   "https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=1",
   options
@@ -71,7 +90,6 @@ fetch(
   })
   .catch((err) => console.error(err));
 
-// Function to display items with a given limit
 function displayItems(items, container, limit) {
   const count = limit > items.length ? items.length : limit;
   const itemsToShow = items.slice(0, count);
@@ -80,8 +98,7 @@ function displayItems(items, container, limit) {
       const posterPath = item.poster_path
         ? `https://image.tmdb.org/t/p/w400/${item.poster_path}`
         : "https://via.placeholder.com/400x600?text=No+Image";
-      // For movies, link to details-movie.html; for series, link to details-tv.html.
-      // Here we assume if item.original_title exists, it's a movie; otherwise it's TV.
+
       const detailPage = item.original_title
         ? "details-movie.html"
         : "details-tv.html";
@@ -110,7 +127,6 @@ function displayItems(items, container, limit) {
   container.innerHTML = `<div class="row">${html}</div>`;
 }
 
-// Movies "Show More" and "Show Less" events
 showMoviesBtn.addEventListener("click", () => {
   displayItems(allMovies, moviesGallery, allMovies.length);
   showMoviesBtn.style.display = "none";
@@ -123,7 +139,6 @@ hideMoviesBtn.addEventListener("click", () => {
   showMoviesBtn.style.display = "inline-block";
 });
 
-// Series "Show More" and "Show Less" events
 showSeriesBtn.addEventListener("click", () => {
   displayItems(allSeries, seriesGallery, allSeries.length);
   showSeriesBtn.style.display = "none";
@@ -144,9 +159,11 @@ document.getElementById("toggleSidebar").addEventListener("click", () => {
   if (sidebar.classList.contains("d-none")) {
     sidebar.classList.remove("d-none");
     sidebar.classList.add("d-flex");
+    document.getElementById("toggleSidebar").innerText = "Close Sidebar";
   } else {
     sidebar.classList.remove("d-flex");
     sidebar.classList.add("d-none");
+    document.getElementById("toggleSidebar").innerText = "Open Sidebar";
   }
 });
 
@@ -156,14 +173,14 @@ document.getElementById("toggleSidebar").addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchInput");
   const moviesGallery = document.querySelector(".the-gallery");
-  const API_KEY = "YOUR_API_KEY"; // Replace with your TMDb API key
+  const API_KEY = "YOUR_API_KEY";
 
   searchInput.addEventListener("input", () => {
     const query = searchInput.value.trim();
     if (query.length > 2) {
       searchMovies(query);
     } else {
-      moviesGallery.innerHTML = ""; // Clear results if input is empty
+      moviesGallery.innerHTML = "";
     }
   });
 });

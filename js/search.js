@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const searchInput = document.getElementById("searchInput");
+  const searchInput = document.querySelectorAll("#searchInput");
   const searchResults = document.querySelector(".search");
+  const searchResultsPhone = searchInput[1];
+  const searchResultsDesktop = searchInput[0];
 
-  // TMDB API options with Bearer Token
   const options = {
     method: "GET",
     headers: {
@@ -42,18 +43,24 @@ document.addEventListener("DOMContentLoaded", () => {
           ${movies
             .map(
               (movie) => `
+
             <div class="col-md-3 mb-4">
-              <div class="card">
+              <div class="card bg-black text-white">
                 <img src="https://image.tmdb.org/t/p/w500${
                   movie.poster_path || ""
-                }" class="card-img-top" alt="${movie.title}">
+                }" class="card-img-top main-text" alt="${movie.title}">
                 <div class="card-body">
-                  <h5 class="card-title">${movie.title}</h5>
+                  <h5 class="card-title main-text fw-bold fs-4">${
+                    movie.title
+                  }</h5>
                   <p class="card-text">${movie.overview.slice(0, 100)}...</p>
-                  <a href="#" class="btn btn-primary">View Details</a>
+                  <a href="/details-movie.html?id=${
+                    movie.id
+                  }" class="btn btn-primary bg-my-color border-0">View Details</a>
                 </div>
               </div>
             </div>
+
           `
             )
             .join("")}
@@ -64,15 +71,19 @@ document.addEventListener("DOMContentLoaded", () => {
           ${series
             .map(
               (show) => `
-            <div class="col-md-3 mb-4">
-              <div class="card">
+            <div class="col-md-3  mb-4">
+              <div class="card bg-black text-white">
                 <img src="https://image.tmdb.org/t/p/w500${
                   show.poster_path || ""
                 }" class="card-img-top" alt="${show.name}">
                 <div class="card-body">
-                  <h5 class="card-title">${show.name}</h5>
+                  <h5 class="card-title main-text fw-bold fs-4">${
+                    show.name
+                  }</h5>
                   <p class="card-text">${show.overview.slice(0, 100)}...</p>
-                  <a href="#" class="btn btn-primary">View Details</a>
+                  <a href="/details-tv.html?id=${
+                    show.id
+                  }" class="btn btn-primary  bg-my-color border-0">View Details</a>
                 </div>
               </div>
             </div>
@@ -83,40 +94,70 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
   }
 
-  searchInput.addEventListener("input", () => {
-    const query = searchInput.value.trim();
+  searchResultsDesktop.addEventListener("input", () => {
+    const query = searchResultsDesktop.value.trim();
     if (query.length > 2) {
       searchMoviesAndSeries(query);
     } else {
-      searchResults.innerHTML = ""; // Clear search results if input is empty
+      searchResults.innerHTML = "";
+    }
+  });
+  searchResultsPhone.addEventListener("input", () => {
+    const query = searchResultsPhone.value.trim();
+    if (query.length > 2) {
+      searchMoviesAndSeries(query);
+    } else {
+      searchResults.innerHTML = "";
     }
   });
 });
+
 let signup = document.querySelector(".signUp");
 
-if (localStorage.key("signupData") != "") {
-  const storedData = JSON.parse(localStorage.getItem("signupData"));
-  const username = storedData ? storedData.name : "signup";
-  signup.addEventListener("click", (stop) => {
-    stop.preventDefault();
+const storedData = localStorage.getItem("signupData");
+if (storedData) {
+  const userData = JSON.parse(storedData);
+  const username = userData.username || "User";
+
+  signup.textContent = username;
+
+  signup.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    let existingSignOut = document.querySelector(".signOut");
+    if (existingSignOut) {
+      existingSignOut.remove();
+      return;
+    }
+
     let signOut = document.createElement("span");
     signOut.textContent = "Sign Out";
-    signOut.style.color = "Red";
-    signOut.style.fontWeight = "bold";
-    signOut.style.cursor = "pointer";
-    signOut.style.position = "absolute";
-    signOut.style.bottom = "-1.5em";
-    signOut.style.left = "1em";
+    signOut.classList.add("signOut");
+    signOut.style.cssText = `
+      color: red;
+      font-weight: bold;
+      cursor: pointer;
+      position: absolute;
+      bottom: -1.5em;
+      left: 1em;
+    `;
+
     signOut.addEventListener("click", () => {
-      signup.innerHTML = "Sign Up";
-      signup.addEventListener("click", () => {
-        window.location.href = "signup.html";
-      });
+      localStorage.removeItem("signupData");
+      signup.textContent = "Sign Up";
+      signup.setAttribute("href", "signup.html");
+      location.reload();
     });
+
     signup.appendChild(signOut);
   });
-  signup.innerHTML = username;
+} else {
+  signup.textContent = "Sign Up";
+  signup.addEventListener("click", () => {
+    window.location.href = "signup.html";
+  });
 }
+
 // ------------------------------
 // Sidebar Toggle Code
 // ------------------------------
@@ -126,8 +167,10 @@ document.getElementById("toggleSidebar").addEventListener("click", () => {
   if (sidebar.classList.contains("d-none")) {
     sidebar.classList.remove("d-none");
     sidebar.classList.add("d-flex");
+    document.getElementById("toggleSidebar").innerText = "Close Sidebar";
   } else {
     sidebar.classList.remove("d-flex");
     sidebar.classList.add("d-none");
+    document.getElementById("toggleSidebar").innerText = "Open Sidebar";
   }
 });

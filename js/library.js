@@ -14,9 +14,8 @@ const sortBy = document.getElementById("sortBy");
 const sortAsc = document.getElementById("sortAsc");
 const sortDesc = document.getElementById("sortDesc");
 
-let sortOrder = "asc"; // Default sorting order
+let sortOrder = "asc";
 
-// 🟢 تحميل قائمة الأنواع من TMDB
 fetch("https://api.themoviedb.org/3/genre/movie/list?language=en", options)
   .then((res) => res.json())
   .then((res) => {
@@ -31,7 +30,6 @@ fetch("https://api.themoviedb.org/3/genre/movie/list?language=en", options)
   })
   .catch((err) => console.error("Error fetching genres:", err));
 
-// 🟢 جلب الأفلام بناءً على الفلاتر المختارة
 function fetchMovies() {
   const selectedGenre = genreFilter.value;
   const selectedRating = ratingFilter.value;
@@ -53,7 +51,6 @@ function fetchMovies() {
     });
 }
 
-// 🟢 عرض الأفلام على الصفحة
 function displayMovies(movies) {
   try {
     if (!movies || movies.length === 0) {
@@ -98,12 +95,10 @@ function displayMovies(movies) {
   }
 }
 
-// 🟢 تحديث البيانات عند تغيير الفلاتر
 genreFilter.addEventListener("change", fetchMovies);
 ratingFilter.addEventListener("change", fetchMovies);
 sortBy.addEventListener("change", fetchMovies);
 
-// 🟢 تغيير ترتيب الفرز (تصاعدي أو تنازلي)
 sortAsc.addEventListener("click", () => {
   sortOrder = "asc";
   fetchMovies();
@@ -114,33 +109,53 @@ sortDesc.addEventListener("click", () => {
   fetchMovies();
 });
 
-// 🟢 تحميل الأفلام عند فتح الصفحة
 fetchMovies();
 let signup = document.querySelector(".signUp");
 
-if (localStorage.key("signupData") != "") {
-  const storedData = JSON.parse(localStorage.getItem("signupData"));
-  const username = storedData ? storedData.name : "signup";
-  signup.addEventListener("click", (stop) => {
-    stop.preventDefault();
+const storedData = localStorage.getItem("signupData");
+if (storedData) {
+  const userData = JSON.parse(storedData);
+  const username = userData.username || "User";
+
+  signup.textContent = username;
+
+  signup.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    let existingSignOut = document.querySelector(".signOut");
+    if (existingSignOut) {
+      existingSignOut.remove();
+      return;
+    }
+
     let signOut = document.createElement("span");
     signOut.textContent = "Sign Out";
-    signOut.style.color = "Red";
-    signOut.style.fontWeight = "bold";
-    signOut.style.cursor = "pointer";
-    signOut.style.position = "absolute";
-    signOut.style.bottom = "-1.5em";
-    signOut.style.left = "1em";
+    signOut.classList.add("signOut");
+    signOut.style.cssText = `
+      color: red;
+      font-weight: bold;
+      cursor: pointer;
+      position: absolute;
+      bottom: -1.5em;
+      left: 1em;
+    `;
+
     signOut.addEventListener("click", () => {
-      signup.innerHTML = "Sign Up";
-      signup.addEventListener("click", () => {
-        window.location.href = "signup.html";
-      });
+      localStorage.removeItem("signupData");
+      signup.textContent = "Sign Up";
+      signup.setAttribute("href", "signup.html");
+      location.reload();
     });
+
     signup.appendChild(signOut);
   });
-  signup.innerHTML = username;
+} else {
+  signup.textContent = "Sign Up";
+  signup.addEventListener("click", () => {
+    window.location.href = "signup.html";
+  });
 }
+
 // ------------------------------
 // Sidebar Toggle Code
 // ------------------------------
@@ -149,8 +164,10 @@ document.getElementById("toggleSidebar").addEventListener("click", () => {
   if (sidebar.classList.contains("d-none")) {
     sidebar.classList.remove("d-none");
     sidebar.classList.add("d-flex");
+    document.getElementById("toggleSidebar").innerText = "Close Sidebar";
   } else {
     sidebar.classList.remove("d-flex");
     sidebar.classList.add("d-none");
+    document.getElementById("toggleSidebar").innerText = "Open Sidebar";
   }
 });
