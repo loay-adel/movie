@@ -1,3 +1,7 @@
+![alt text](img/movie.png)
+![alt text](img/movie1.png)
+![alt text](img/movie2.png)
+
 🎬 About the Project
 
 This project is a dynamic movie filtering and details page that interacts with The Movie Database (TMDB) API. Users can:
@@ -33,7 +37,6 @@ Code Optimization: AI helped restructure code for better efficiency and maintain
 DRY Principle: Refactored repeated code blocks into reusable functions.
 
 Debugging: Identified and resolved API response structure issues.
-
 
 🔧 Installation
 
